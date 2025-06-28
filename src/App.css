@@ -1,0 +1,322 @@
+/**
+ * 📊 Publications View App - 主应用样式
+ * 
+ * 设计特色：
+ * - 🎨 现代化的渐变色彩搭配  
+ * - ✨ 流畅的动画效果
+ * - 📱 完全响应式设计
+ * - 🌟 优秀的用户体验
+ */
+
+/* ============ 全局重置和基础样式 ============ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #fafafa 0%, #f3f4f6 100%);
+  color: #1f2937;
+  line-height: 1.6;
+}
+
+/* ============ 主应用容器 ============ */
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fafafa 0%, #f3f4f6 100%);
+}
+
+/* ============ (统计信息头部样式已移除，现在使用小标签) ============ */
+
+/* ============ 加载状态 ============ */
+.app-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
+}
+
+.loading-spinner {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: spin 2s linear infinite, pulse 1.5s ease-in-out infinite alternate;
+}
+
+.loading-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.loading-progress {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  height: 6px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loading-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #fff, #f0f8ff);
+  border-radius: 20px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.loading-details {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  font-weight: 500;
+  min-height: 1.2rem;
+}
+
+/* ============ 错误状态 ============ */
+.app-error {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  color: white;
+  padding: 20px;
+}
+
+.error-container {
+  text-align: center;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 30px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: shake 0.5s ease-in-out;
+}
+
+.error-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.error-message {
+  font-size: 1rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+.error-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.retry-button,
+.debug-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.retry-button {
+  background: rgba(255, 255, 255, 0.9);
+  color: #ef4444;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+.retry-button:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+}
+
+.debug-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.debug-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* ============ 动画效果 ============ */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============ 响应式设计 ============ */
+@media (max-width: 768px) {
+  .loading-container,
+  .error-container {
+    padding: 30px 20px;
+    margin: 0 10px;
+  }
+
+  .loading-spinner,
+  .error-icon {
+    font-size: 3rem;
+  }
+
+  .loading-text,
+  .error-title {
+    font-size: 1.1rem;
+  }
+
+  .error-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .retry-button,
+  .debug-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .loading-container,
+  .error-container {
+    padding: 25px 15px;
+  }
+}
+
+/* ============ 高对比度模式支持 ============ */
+@media (prefers-contrast: high) {
+  .loading-container,
+  .error-container {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* ============ 减少动画偏好支持 ============ */
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation: none;
+  }
+
+  .stat-item:hover {
+    transform: none;
+  }
+
+  .retry-button:hover,
+  .debug-button:hover {
+    transform: none;
+  }
+
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ============ 暗色主题支持 ============ */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #e2e8f0;
+  }
+
+  .app {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  }
+
+  .loading-container,
+  .error-container {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .retry-button {
+    background: rgba(229, 231, 235, 0.9);
+    color: #1f2937;
+  }
+
+  .retry-button:hover {
+    background: #e5e7eb;
+  }
+}
