@@ -93,7 +93,15 @@ export const SOCIAL_PROVIDERS_CLIENT_ID = {
 // WebSocket事件常量
 export const WS_EVENTS = {
   CLIENT_CONNECTED: "client_connected",
-  UPDATE_URL_ITEM_FETCHING_PROCESS: "update_url_item_fetching_process",
+
+  // 获取Google Scholar信息
+  START_FETCH_A_GOOGLE_SCHOLAR_URL: "start_fetch_a_google_scholar_url",
+  STOP_FETCH_A_GOOGLE_SCHOLAR_URL: "stop_fetch_a_google_scholar_url",
+  FETCHED_GOOGLE_SCHOLAR_BASIC_INFO: "fetched_google_scholar_basic_info",
+  UPDATE_FETCH_A_GOOGLE_SCHOLAR_URL_PROCESS:
+    "update_fetch_a_google_scholar_url_process",
+  FAILED_FETCH_A_GOOGLE_SCHOLAR_URL: "failed_fetch_a_google_scholar_url",
+  FETCHED_COMPLETED_WITH_PAPERS_INFO: "fetched_completed_with_papers_info",
 };
 
 export interface GoogleSearchRequest {
@@ -102,14 +110,40 @@ export interface GoogleSearchRequest {
   clientId: string;
 }
 
-export interface URLItem {
-  searchId: string;
+export interface PaperBase {
+  title: string;
+  authors: string[];
+  year: number;
+  date: string;
   url: string;
-  shortDescription: string;
+  pdf_url?: string;
+  citations?: number;
+  publisher?: string;
+  paper_type?: string;
+  description?: string;
+}
+
+export type URLItemStatus =
+  | "error"
+  | "collecting_info"
+  | "collected_info"
+  | "searching_papers"
+  | "completed";
+
+export interface URLItem {
+  search_id: string;
+  client_id: string;
+  url: string;
+  author_name: string;
+  status: URLItemStatus;
   progress: number;
-  status: "completed" | "processing" | "error";
-  fetchedPaperCount: number;
-  totalPaperCount: number;
+  fetched_paper_count: number | null;
+  total_paper_count: number | null;
+  papers_urls: string[];
+  papers: Paper[];
+  error_message: string;
+  start_time: string;
+  thread_id: number;
 }
 // 论文相关类型
 

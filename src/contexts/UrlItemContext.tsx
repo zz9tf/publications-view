@@ -13,14 +13,14 @@ import axios, {
 } from "axios";
 import Cookies from "js-cookie";
 import { useWebSocket } from "./WebSocketContext";
-import { API_PATHS, GoogleSearchRequest, URLItem, WS_EVENTS } from "@/types";
+import { EventData, URLItem, WS_EVENTS } from "@/types";
 
 // 定义上下文的类型
 interface UrlItemContextType {
   urlItems: URLItem[];
   isLoading: boolean;
   error: string | null;
-  fetchUrlItem: (url: string, searchId: string) => Promise<void>;
+  fetchUrlItem: (url: string, searchId: string) => void;
   clearError: () => void;
   removeUrlItem: (searchId: string) => Promise<void>;
 }
@@ -75,11 +75,11 @@ export const UrlItemProvider: React.FC<{
   const [urlItems, setUrlItems] = useState<URLItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { subscribeToEvent, clientId } = useWebSocket();
+  const { subscribeToEvent, clientId, sendMessage } = useWebSocket();
 
   // 获取收件箱条目
   const fetchUrlItem = useCallback(
-    async (url: string, searchId: string) => {
+    (url: string, searchId: string) => {
       if (!isAuthenticated) {
         setUrlItems([]);
         return;
@@ -89,21 +89,30 @@ export const UrlItemProvider: React.FC<{
       setError(null);
 
       try {
-        const response = await api.post(API_PATHS.FETCH_URL_ITEM, {
+        sendMessage(WS_EVENTS.START_FETCH_A_GOOGLE_SCHOLAR_URL, {
           url,
           searchId,
           clientId,
-        } as GoogleSearchRequest);
-        const urlItem = {
-          searchId,
+        });
+
+        const newUrlItem: URLItem = {
+          search_id: searchId,
+          client_id: clientId || "",
           url,
-          shortDescription: response.data.data.short_description,
-          progress: response.data.data.progress,
-          status: response.data.data.status,
-          fetchedPaperCount: response.data.data.fetched_paper_count,
-          totalPaperCount: response.data.data.total_paper_count,
-        } as URLItem;
-        setUrlItems((prev) => [...prev, urlItem]);
+          author_name: url,
+          status: "collecting_info",
+          progress: 0,
+          fetched_paper_count: null,
+          total_paper_count: null,
+          papers_urls: [],
+          papers: [],
+          error_message: "",
+          start_time: new Date().toISOString(),
+          thread_id: 0,
+        };
+        console.log("newUrlItem:", newUrlItem);
+
+        setUrlItems((prev: URLItem[]) => [...prev, newUrlItem]);
       } catch (err) {
         console.error("Error fetching inbox items:", err);
         setError("Failed to load inbox items");
@@ -111,12 +120,12 @@ export const UrlItemProvider: React.FC<{
         setIsLoading(false);
       }
     },
-    [isAuthenticated, clientId]
+    [isAuthenticated, clientId, sendMessage]
   );
 
   const removeUrlItem = useCallback(
     async (searchId: string) => {
-      setUrlItems((prev) => prev.filter((item) => item.searchId !== searchId));
+      setUrlItems((prev) => prev.filter((item) => item.search_id !== searchId));
     },
     [setUrlItems]
   );
@@ -127,6 +136,24 @@ export const UrlItemProvider: React.FC<{
   const clearError = useCallback(() => {
     setError(null);
   }, []);
+
+  const updateFetchAGoogleScholarUrlProcess = (data: EventData) => {
+    console.log("updateFetchAGoogleScholarUrlProcess:", data);
+    setUrlItems((prev: URLItem[]) =>
+      prev.map((item) =>
+        item.search_id === data.search_id ? (data as unknown as URLItem) : item
+      )
+    );
+  };
+
+  const fetchedCompletedWithPapersInfo = (data: EventData) => {
+    console.log("fetchedCompletedWithPapersInfo:", data);
+    setUrlItems((prev: URLItem[]) =>
+      prev.map((item) =>
+        item.search_id === data.search_id ? (data as unknown as URLItem) : item
+      )
+    );
+  };
 
   // 当认证状态或日期过滤器改变时获取数据
   useEffect(() => {
@@ -141,16 +168,20 @@ export const UrlItemProvider: React.FC<{
     if (!isAuthenticated) return;
 
     // 订阅转录完成事件
-    const unsubscribe = subscribeToEvent(
-      WS_EVENTS.UPDATE_URL_ITEM_FETCHING_PROCESS,
-      (data) => {
-        console.log("UrlItem:", data);
-      }
+    const unsubscribeUpdateFetchAGoogleScholarUrlProcess = subscribeToEvent(
+      WS_EVENTS.UPDATE_FETCH_A_GOOGLE_SCHOLAR_URL_PROCESS,
+      updateFetchAGoogleScholarUrlProcess
+    );
+
+    const unsubscribeFetchedCompletedWithPapersInfo = subscribeToEvent(
+      WS_EVENTS.FETCHED_COMPLETED_WITH_PAPERS_INFO,
+      fetchedCompletedWithPapersInfo
     );
 
     // 组件卸载时取消订阅
     return () => {
-      unsubscribe();
+      unsubscribeUpdateFetchAGoogleScholarUrlProcess();
+      unsubscribeFetchedCompletedWithPapersInfo();
     };
   }, [isAuthenticated, subscribeToEvent]); // 🔥 更新依赖
 

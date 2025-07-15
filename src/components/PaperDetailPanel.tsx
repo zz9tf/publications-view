@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ChevronRight, BookOpen, Save } from "lucide-react";
-import { Paper } from "../types.ts/Paper";
+import { Paper } from "@/types";
 
 interface PaperDetailPanelProps {
   isCollapsed: boolean;
@@ -96,10 +96,10 @@ export default function PaperDetailPanel({
               </div>
 
               {/* 摘要 */}
-              {selectedPaper.abstract && (
+              {selectedPaper.description && (
                 <div className="mb-6">
                   <p className="text-sm text-gray-700 leading-relaxed">
-                    {selectedPaper.abstract}
+                    {selectedPaper.description}
                   </p>
                 </div>
               )}

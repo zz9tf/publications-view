@@ -152,7 +152,7 @@ export default function AddPaperModal({ isOpen, onClose }: AddPaperModalProps) {
                     <div className="flex items-center justify-between my-1">
                       <div className="flex items-center gap-3">
                         <span className="text-sm text-gray-700">
-                          {item.shortDescription}
+                          {item.author_name} {item.status}
                         </span>
                         {/* 进度条 */}
                         <div className="flex items-center">
@@ -170,14 +170,17 @@ export default function AddPaperModal({ isOpen, onClose }: AddPaperModalProps) {
                             {item.progress}%
                           </span>
                         </div>
-                        {item.status === "completed" &&
-                          item.fetchedPaperCount !== undefined &&
-                          item.totalPaperCount !== undefined && (
-                            <span className="text-xs text-gray-500">
-                              Fetched {item.fetchedPaperCount}/
-                              {item.totalPaperCount} papers
-                            </span>
-                          )}
+                        <span className="text-xs text-gray-500">
+                          Fetched{" "}
+                          {item.fetched_paper_count !== null
+                            ? item.fetched_paper_count
+                            : "?"}
+                          /
+                          {item.total_paper_count !== null
+                            ? item.total_paper_count
+                            : "?"}
+                          papers
+                        </span>
                         {item.status === "error" && (
                           <span className="text-xs text-red-500">
                             {item.status || "Error"}
@@ -186,7 +189,7 @@ export default function AddPaperModal({ isOpen, onClose }: AddPaperModalProps) {
                       </div>
                       <button
                         className="ml-2 text-gray-400 transition-opacity"
-                        onClick={() => removeUrlItem(item.searchId)}
+                        onClick={() => removeUrlItem(item.search_id)}
                       >
                         <X size={16} />
                       </button>
