@@ -56,7 +56,8 @@ export default function PaperDetailPanel({
 
               {/* 作者信息 */}
               <div className="mb-3">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 flex flex-row gap-1">
+                  <span className="font-semibold">Authors:</span>
                   {selectedPaper.authors.map((author, index) => (
                     <span key={index}>
                       {author}
@@ -67,33 +68,43 @@ export default function PaperDetailPanel({
               </div>
 
               {/* 发表信息 */}
-              <div className="text-sm text-gray-500 mb-4">
-                <span>
-                  {selectedPaper.year}, {selectedPaper.publisher || "arXiv.org"}
-                </span>
+              <div className="text-sm text-gray-500 mb-4 flex flex-col gap-1">
+                <div className="flex flex-row gap-1">
+                  <span className="font-semibold">Date:</span>
+                  <span>{selectedPaper.date}</span>
+                </div>
+                <div className="flex flex-row gap-1">
+                  <span className="font-semibold">
+                    {selectedPaper.paper_type}:
+                  </span>
+                  <span>{selectedPaper.publisher || "arXiv.org"}</span>
+                </div>
               </div>
 
-              <div className="text-sm text-gray-500 mb-4">
-                {selectedPaper.citations} Citations
+              <div className="text-sm text-gray-500 mb-4 flex flex-row gap-1">
+                <span className="font-semibold">Citations:</span>
+                <span>{selectedPaper.citations}</span>
               </div>
 
               {/* Open in */}
-              <div className="mb-6">
-                <div className="text-sm font-medium text-gray-700 mb-2">
-                  Open in:
+              {selectedPaper.pdf_url && (
+                <div className="mb-6 flex flex-row items-center gap-2">
+                  <div className="text-sm font-medium text-gray-700">
+                    Open in:
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() =>
+                        window.open(selectedPaper.pdf_url, "_blank")
+                      }
+                      className="flex items-center justify-center p-2 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                      title="Open in web browser"
+                    >
+                      <img src="/globe.svg" alt="Web" className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <button className="flex items-center justify-center p-2 border border-gray-200 rounded-md">
-                    <img src="/file.svg" alt="File" className="w-5 h-5" />
-                  </button>
-                  <button className="flex items-center justify-center p-2 border border-gray-200 rounded-md">
-                    <img src="/globe.svg" alt="Web" className="w-5 h-5" />
-                  </button>
-                  <button className="flex items-center justify-center p-2 border border-gray-200 rounded-md">
-                    <img src="/window.svg" alt="Window" className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
+              )}
 
               {/* 摘要 */}
               {selectedPaper.description && (

@@ -148,13 +148,14 @@ export interface URLItem {
 // 论文相关类型
 
 export interface Paper {
-  id?: string;
   title: string;
-  year: number;
   authors: string[];
+  year: number;
   date: string;
-  citations: number;
-  paper_type: string;
+  url: string;
+  pdf_url?: string;
+  citations?: number;
+  paper_type?: string;
   publisher?: string;
   description?: string;
   link?: string;
